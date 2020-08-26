@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Raindrops1</title>
+        <link rel="stylesheet" type="text/css" href="../css/style.css">
+    </head>
+
+    <body>
+        <header id="head">
+            <h1><a href="../index.html">Javascript</a></h1>
+        </header>
+        <h2>Raindrops</h2>
+        <p>Click on the canvas to make raindrops!</p>
+
+        <!--This draws the canvas on the webpage -->
+        <canvas id="mycanvas"></canvas>
+        <br><hr><br>
+        <section>
+            <article>
+                <a href="https://retuowmats.github.io/"><img src="../logos/home.jpg" alt="Home"></a>
+            </article>
+
+            <article>
+                <aside>
+                    <a href="https://github.com/retuowmats"><img src="../logos/github.jpg" alt="Github"></a>
+                </aside>
+            </article>
+
+            <article>
+                <aside>
+                    <a href="https://github.com/retuowmats/webdesign"><img src="../logos/html_css.jpg" alt="HTML5 en CSS3"></a>
+                </aside>
+            </article>
+
+            <article>
+                <aside>
+                    <a href="https://github.com/retuowmats/php"><img src="../logos/php_sql.jpg" alt="PHP en MySQL"></a>
+                </aside>
+            </article>
+
+            <article>
+                <aside>
+                    <a href="https://github.com/retuowmats/python"><img src="../logos/python.jpg" alt="Python"></a>
+                </aside>
+            </article>
+
+            <article>
+                <aside>
+                    <a href="https://github.com/retuowmats/javascript"><img src="../logos/javascript.jpg" alt="Javascript en jQuery"></a>
+                </aside>
+            </article>
+        </section>
+    </body>
+
+    <!-- Making the Kahn code work via an external Javascript file -->
+    <!-- See https://khanacademy.zendesk.com/hc/en-us/articles/202260404-What-parts-of-ProcessingJS-does-Khan-Academy-support- for differences -->
+    <script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script>
+    <script >var programCode = function(processingInstance) {
+        with (processingInstance) {
+            size(400, 400);
+            frameRate(30);
+
+            var xPositions = [200,100,300,400];
+            var yPositions = [0,0,0,0];
+            var zPositions = [10,11,12,13]; //width
+            var qPositions = [10,11,12,13]; //height
+
+            draw = function() {
+                background(204, 247, 255);
+                noStroke();
+                fill(mouseX, mouseY, 255);
+
+                for (var i = 0; i < xPositions.length; i++) {
+                    ellipse(xPositions[i], yPositions[i], zPositions[i], qPositions[i]);
+                    yPositions[i] += 5;
+                    if (yPositions[i] > 400) {
+                    yPositions[i] = 0;
+                    xPositions[i] += random(-100, 100);
+                }
+            }
+        }
+
+            mouseClicked = function() {
+                xPositions.push(mouseX);
+                yPositions.push(mouseY);
+                zPositions.push(mouseY/10);
+                qPositions.push(mouseY/10);
+            }
+        }
+    };
+
+    // Get the canvas that ProcessingJS will use
+    var canvas = document.getElementById("mycanvas");
+    // Pass the function to ProcessingJS constructor
+    var processingInstance = new Processing(canvas, programCode); </script>
+</html>
