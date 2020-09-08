@@ -113,7 +113,7 @@
                     var lengteMijnWaardes = $('#mijnWaardes li').length;
 
                     for (var h = lengteMijnWaardes -1; h < lengteMijnWaardes; h++) {
-                        waardeArray0[radioWaarde].push([radioWaarde + ':' + waardeOmToeTeVoegen]);
+                        waardeArray0[radioWaarde].push([waardeOmToeTeVoegen + ':' + radioWaarde]);
                     }
                     // waarde toevoegen aan de lijst
                     $('#mijnWaardes').append('<li class="'+ radioWaarde + '">' + waardeOmToeTeVoegen + ':<b>'  + radioWaarde + '</b> // ' + verwijderWaarde + '</li>');
