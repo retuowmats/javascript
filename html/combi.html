@@ -133,10 +133,10 @@
                             // is there one more layer?
                             if ( depth +1 < waardeArray0.length ) {
                                 // yes: iterate the layer
-                                recursiveSearch ( text + ((text=="") ? "" : " ") + waardeArray0[depth][i] , depth +1 );
+                                recursiveSearch ( text + ((text=="") ? "" : ",")  + waardeArray0[depth][i] , depth +1 );
                             } else {
                                 // no: this is the last layer. we add the result to the array
-                                possibilities.push ( text + ',' + waardeArray0[depth][i] );
+                                possibilities.push ( text + ',' + waardeArray0[depth][i] + ',');
                             }
                         }
                     }
