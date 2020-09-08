@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Combinatie import</title>
+        <meta charset="utf-8">
+        <style>
+            form {
+                display: inline;
+            }
+
+            #eindResultaat, #samengevoegd {
+                background: lightgray;
+                border: 1px solid #333;
+			    border-radius: 4px;
+            }
+
+        </style>
+        <script src="../script/jquery-1.9.1.min.js"></script>
+        <script>
+            $(document).ready(function () {
+
+                // attribuut toevoegen aan lijst
+                $('#btnAttribuutToevoegen').on('click', function () {
+                    var attribuutOmToeTeVoegen = $('#txtAttribuut').val();
+                    var verwijderAttribuut = '<a href="#" class=removeAttribuut>Verwijder</a>';
+                    // Attribuut op volgorde zetten
+                    var countAttribuut = $('#mijnAttributen li').length;
+                    // Keuze vastleggen
+                    var keuzeMenu = $('#keuze').prop("selected", "selected").val();
+                    var keuzeMenuString = '';
+
+                    // keuze selectie toevoegen
+                    if (keuzeMenu == 'Keuzerondje') {
+                        keuzeMenuString = 'select';
+                    } else if (keuzeMenu == 'Dropdownmenu') {
+                        keuzeMenuString = 'dropdown';
+                    } else if (keuzeMenu == 'Kleur') {
+                        keuzeMenuString = 'color';
+                    };
+                    // attribuut toevoegen aan de lijst
+                    $('#mijnAttributen').append('<li>' + attribuutOmToeTeVoegen + ':' + keuzeMenuString + ':' + countAttribuut + ' ' + verwijderAttribuut + '</li>');
+
+                    // Aantal attributen opzoeken
+                    var aantalAttributen = $('#mijnAttributen li').length;
+                    var attributenArray = [];
+
+                    // Attributen in een array plaatsen
+                    attributenArray.push( {
+                        attr : attribuutOmToeTeVoegen,
+                        keuze : keuzeMenuString,
+                        plaatsing : countAttribuut
+                    });
+
+                    // Attributen en waardes samenvoegen in twee tabel cellen voor kopiëren
+                    // twee list elementen samenvoegen, geen object maken
+                    $('#btnSamenvoegen').on('click', function() {
+                        var attribuutSamen = (attributenArray[0].attr +':' + attributenArray[0].keuze + ':' + attributenArray[0].plaatsing + ',');
+                        $('#samengevoegd').append(attribuutSamen);
+                    });
+                });
+
+                // Attributenveld leegmaken
+                $('#btnRemove').on('click', function () {
+                    $('#samengevoegd').empty();
+                })
+
+                // Item verwijderen uit de lijst
+                $('#mijnAttributen').on('click', '.removeAttribuut', function () {
+                    $(this).parent('li').remove();
+                });
+
+                // Input veld leegmaken bij focus
+                $('#txtAttribuut').on('click', function () {
+                    $(this).val('');
+                });
+                // attributen selecteren en kopieëren
+                $('#btnAttribuut').on('click', function () {
+                    selectElementContents( document.getElementById('samengevoegd'));
+                    document.execCommand("copy");
+                    alert('Gegevens zijn gekopieerd en kunnen geplakt worden');
+                });
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+                // array aanroepen
+                var waardeArray0 = [];
+
+                // aantal attributen aangeven voor het maken van een correcte array
+                $('#btnWaardeCombi').on('click', function() {
+                    var aantalAttr = $('#txtWaardeCombi').val();
+                    if (aantalAttr == 1) {
+                        waardeArray0 = [[]];
+                        $('#formRadio').append('<INPUT TYPE="radio" NAME="radio" VALUE="0" checked>0');
+                    } else if (aantalAttr == 2) {
+                        waardeArray0 = [[],[]];
+                        $('#formRadio').append('<INPUT TYPE="radio" NAME="radio" VALUE="0" checked>0<INPUT TYPE="radio" NAME="radio" VALUE="1">1');
+                    } else if (aantalAttr == 3) {
+                        waardeArray0 = [[],[],[]];
+                        $('#formRadio').append('<INPUT TYPE="radio" NAME="radio" VALUE="0" checked>0<INPUT TYPE="radio" NAME="radio" VALUE="1">1<INPUT TYPE="radio" NAME="radio" VALUE="2">2');
+                    } else if (aantalAttr == 4) {
+                        waardeArray0 = [[],[],[],[]];
+                        $('#formRadio').append('<INPUT TYPE="radio" NAME="radio" VALUE="0" checked>0<INPUT TYPE="radio" NAME="radio" VALUE="1">1<INPUT TYPE="radio" NAME="radio" VALUE="2">2<INPUT TYPE="radio" NAME="radio" VALUE="3">3');
+                    } else if (aantalAttr == 5) {
+                        waardeArray0 = [[],[],[],[],[]];
+                        $('#formRadio').append('<INPUT TYPE="radio" NAME="radio" VALUE="0" checked>0<INPUT TYPE="radio" NAME="radio" VALUE="1">1<INPUT TYPE="radio" NAME="radio" VALUE="2">2<INPUT TYPE="radio" NAME="radio" VALUE="3">3<INPUT TYPE="radio" NAME="radio" VALUE="4">4');
+                    }
+                })
+
+                // Waarde toevoegen
+                $('#btnWaardeToevoegen').on('click', function () {
+                    var waardeOmToeTeVoegen = $('#txtWaarde').val();
+                    var radioWaarde = $("input[name=radio]:checked").val();
+                    var verwijderWaarde = '<a href="#" class=removeWaarde>Verwijder</a>';
+                    var lengteMijnWaardes = $('#mijnWaardes li').length;
+
+                    for (var h = lengteMijnWaardes -1; h < lengteMijnWaardes; h++) {
+                        waardeArray0[radioWaarde].push([radioWaarde + ':' + waardeOmToeTeVoegen]);
+                    }
+                    // waarde toevoegen aan de lijst
+                    $('#mijnWaardes').append('<li class="'+ radioWaarde + '">' + waardeOmToeTeVoegen + ':<b>'  + radioWaarde + '</b> // ' + verwijderWaarde + '</li>');
+                });
+
+                // Waardes samenvoegen
+                $('#btnSamenvoegenWaardes').on('click', function() {
+                    // geleend van https://stackoverflow.com/questions/1636355/jquery-javascript-multiple-array-combinations
+                    var recursiveSearch;
+                    var possibilities = [];
+
+                    recursiveSearch = function (text, depth )
+                    {
+                        text = text || "";
+                        depth = depth || 0;
+                        for ( var i = 0; i < waardeArray0[depth].length; i++ ) {
+                            // is there one more layer?
+                            if ( depth +1 < waardeArray0.length ) {
+                                // yes: iterate the layer
+                                recursiveSearch ( text + ((text=="") ? "" : " ") + waardeArray0[depth][i] , depth +1 );
+                            } else {
+                                // no: this is the last layer. we add the result to the array
+                                possibilities.push ( text + ',' + waardeArray0[depth][i] );
+                            }
+                        }
+                    }
+
+                    recursiveSearch ( );
+                    // resultaat weergeven in tabelvorm
+                    for (var i = 0; i < possibilities.length; i++) {
+                        $('#eindResultaat').append('<tr><td>' + possibilities[i] + '</td></tr>');
+                    }
+                });
+
+                // waarden weghalen uit de array
+                $('#btnRemoveWaardes').on('click', function () {
+                    $('#eindResultaat').empty();
+                    var waardeArray0 = [];
+                    var possibilities = [];
+                });
+
+                // Waarde verwijderen
+                $('#mijnWaardes').on('click', '.removeWaarde', function() {
+                    $(this).parent('li').remove();
+                });
+
+                // Input veld leegmaken
+                $('#txtWaarde').on('click', function() {
+                    $(this).val('');
+                });
+                // Input veld leegmaken
+                $('#txtWaardeCombi').on('click', function() {
+                    $(this).val('');
+                });
+                // Functie om gegevens te selecteren
+                function selectElementContents(el) {
+                    var body = document.body, range, sel;
+                    if (document.createRange && window.getSelection) {
+                        range = document.createRange();
+                        sel = window.getSelection();
+                        sel.removeAllRanges();
+                        try {
+                            range.selectNodeContents(el);
+                            sel.addRange(range);
+                        } catch (e) {
+                            range.selectNode(el);
+                            sel.addRange(range);
+                        }
+                    } else if (body.createTextRange) {
+                        range = body.createTextRange();
+                        range.moveToElementText(el);
+                        range.select();
+                    }
+                }
+                // waardes selecteren en kopieëren
+                $('#btnTable').on('click', function () {
+                    selectElementContents( document.getElementById('eindResultaat'));
+                    document.execCommand("copy");
+                    alert('Gegevens zijn gekopieerd en kunnen geplakt worden');
+                });
+            });
+        </script>
+    </head>
+
+    <body>
+        <header>
+            <h1>Makkelijk combinaties importeren</h1>
+        </header>
+        <main>
+            <section id="attribuut">
+                <h2>Attribuut toevoegen (Bijvoorbeeld: kleur, maat, gewicht) // Soort keuze (keuzerondje, dropdownmenu, kleur)</h2>
+                <input id="txtAttribuut" placeholder="Kleur, Lengte, Breedte, Inhoud" />
+                <select id="keuze">
+                    <option value="Keuzerondje" id="rondje">Keuzerondje</option>
+                    <option value="Dropdownmenu" id="dropdown">Dropdownmenu</option>
+                    <option value="Kleur" id="kleuren">Kleur</option>
+                    <button id="btnSamenvoegen">Samenvoegen</button>
+                </select>
+                <button id="btnAttribuutToevoegen">Toevoegen</button>
+                <ul id="mijnAttributen"></ul>
+            </section>
+
+            <section id="samenvoegen">
+                <button id="btnSamenvoegen">Samenvoegen Attributen</button>
+                <button id="btnRemove">Verwijder Attributen</button>
+                <table id="samengevoegd"></table>
+                <input type="button" value="select and copy" id="btnAttribuut">
+            </section>
+
+            <section id="waarde">
+                <h2>Waarde toevoegen (Bijvoorbeeld: rood, blauw, zwart)</h2>
+                <input id="txtWaardeCombi" placeholder="Aantal attributen 1-5"/><button id="btnWaardeCombi">Aantal attributen aangeven</button>
+                <p></p>
+                <input id="txtWaarde" placeholder="10cm, 20cm, 30cm" />
+                Geef aan bij welk attribuut deze waarde hoort:
+                <form id="formRadio"></form>
+                <button id="btnWaardeToevoegen">Toevoegen</button>
+                <ul id="mijnWaardes"></ul>
+            </section>
+
+            <section id="samenvoegenWaardes">
+                <button id="btnSamenvoegenWaardes">Samenvoegen Waardes</button>
+                <button id="btnRemoveWaardes">Verwijder Waardes</button>
+                <table  id="eindResultaat"></table>
+                <input type="button" value="select and copy" id="btnTable">
+            </section>
+        </main>
+
+    </body>
+</html>
